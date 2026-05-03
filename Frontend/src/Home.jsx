@@ -19,7 +19,16 @@ const Home = () => {
     boy: false,
   });
   
-  const [cards, setCards] = useState([1, 2, 3, 4, 5, 6, 7, 8]);
+  const [cards, setCards] = useState([
+    { id: 1, videoId: 'EO_1LWqsCNE' },
+    { id: 2, videoId: 'rnXIjl_Rzy4' },
+    { id: 3, videoId: 'u8CbGedbI08' },
+    { id: 4, videoId: '1rWzQP_ZYxc' },
+    { id: 5, videoId: '8JCk5M_xrBs' },
+    { id: 6, videoId: 'rnNPl27Arpk' },
+    { id: 7, videoId: 'M3EYAY2MftI' },
+    { id: 8, videoId: '21X5lGlDOfg' }, // Added a relevant one for the 8th slot
+  ]);
   const [zoomedCard, setZoomedCard] = useState(null);
   const [isMoving, setIsMoving] = useState(false);
   const [movingCardId, setMovingCardId] = useState(null);
@@ -61,10 +70,11 @@ const Home = () => {
     if (isMoving && movingCardId !== null) {
       // Swap movingCardId and id
       const newCards = [...cards];
-      const idx1 = newCards.indexOf(movingCardId);
-      const idx2 = newCards.indexOf(id);
-      newCards[idx1] = cards[idx2];
-      newCards[idx2] = cards[idx1];
+      const idx1 = newCards.findIndex(c => c.id === movingCardId);
+      const idx2 = newCards.findIndex(c => c.id === id);
+      const temp = newCards[idx1];
+      newCards[idx1] = newCards[idx2];
+      newCards[idx2] = temp;
       setCards(newCards);
       setIsMoving(false);
       setMovingCardId(null);
@@ -146,31 +156,40 @@ const Home = () => {
 
         {/* CCTV Grid */}
         <section className={`cctv-grid grid-${screensVisible}`}>
-          {cards.slice(0, screensVisible).map(id => (
+          {cards.slice(0, screensVisible).map((card) => (
             <div 
-              key={id} 
+              key={card.id} 
               className={`cctv-card 
-                ${zoomedCard === id ? 'zoomed' : ''} 
+                ${zoomedCard === card.id ? 'zoomed' : ''} 
                 ${isMoving ? 'shaking' : ''} 
-                ${movingCardId === id ? 'selected-move' : ''}`
+                ${movingCardId === card.id ? 'selected-move' : ''}`
               }
-              onClick={(e) => { e.stopPropagation(); handleCardClick(id); }}
+              onClick={(e) => { e.stopPropagation(); handleCardClick(card.id); }}
             >
               <div className="cctv-header">
-                <span className="camera-name">CAM {id} <span className="rec-dot"></span></span>
+                <span className="camera-name">CAM {card.id} <span className="rec-dot"></span></span>
                 <div className="menu-container">
-                  <button className="menu-btn" onClick={(e) => toggleMenu(e, id)}>
+                  <button className="menu-btn" onClick={(e) => toggleMenu(e, card.id)}>
                     <FaEllipsisV />
                   </button>
-                  {activeMenu === id && (
+                  {activeMenu === card.id && (
                     <div className="card-menu">
-                      <button onClick={(e) => handleZoom(e, id)}><FaSearchPlus /> Zoom In</button>
-                      <button onClick={(e) => handleMove(e, id)}><FaArrowsAlt /> Move</button>
+                      <button onClick={(e) => handleZoom(e, card.id)}><FaSearchPlus /> Zoom In</button>
+                      <button onClick={(e) => handleMove(e, card.id)}><FaArrowsAlt /> Move</button>
                     </div>
                   )}
                 </div>
               </div>
               <div className="cctv-content">
+                <iframe
+                  className="cctv-iframe"
+                  src={`https://www.youtube.com/embed/${card.videoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${card.videoId}&rel=0`}
+                  title={`CCTV Feed ${card.id}`}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+                <div className="click-overlay"></div>
                 <div className="feed-info">
                   <span className="timestamp">REC {currentTime}</span>
                   <div className="highlight-boxes">
