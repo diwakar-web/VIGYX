@@ -171,8 +171,6 @@ const Home = () => {
                 </div>
               </div>
               <div className="cctv-content">
-                {/* Fake CCTV feed look */}
-                <div className="scan-line"></div>
                 <div className="feed-info">
                   <span className="timestamp">REC {currentTime}</span>
                   <div className="highlight-boxes">
