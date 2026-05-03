@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Home.css';
-import { FaGithub, FaLinkedin, FaWhatsapp, FaInstagram, FaEnvelope, FaEllipsisV, FaUserCircle, FaSearchPlus, FaArrowsAlt } from 'react-icons/fa';
+import { FaGithub, FaLinkedin, FaWhatsapp, FaInstagram, FaEnvelope, FaEllipsisV, FaUserCircle, FaSearchPlus, FaArrowsAlt, FaCamera, FaBars, FaTimes } from 'react-icons/fa';
 
 const Home = () => {
   const [screensVisible, setScreensVisible] = useState(4);
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString('en-GB'));
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const zoomRef = useRef(null);
   
   useEffect(() => {
     const timer = setInterval(() => {
@@ -17,6 +19,12 @@ const Home = () => {
     woman: false,
     girl: false,
     boy: false,
+  });
+  const [highlightObjects, setHighlightObjects] = useState({
+    car: false,
+    'motor cycle': false,
+    bus: false,
+    truck: false,
   });
   
   const [cards, setCards] = useState([
@@ -40,6 +48,10 @@ const Home = () => {
 
   const handleHighlightChange = (target) => {
     setHighlightTargets(prev => ({ ...prev, [target]: !prev[target] }));
+  };
+
+  const handleObjectChange = (obj) => {
+    setHighlightObjects(prev => ({ ...prev, [obj]: !prev[obj] }));
   };
 
   const toggleMenu = (e, id) => {
@@ -83,6 +95,22 @@ const Home = () => {
     }
   };
 
+  const takeScreenshot = (e) => {
+    e.stopPropagation();
+    // Simulate screenshot
+    const flash = document.createElement('div');
+    flash.className = 'screenshot-flash';
+    document.body.appendChild(flash);
+    setTimeout(() => flash.remove(), 100);
+
+    // Provide a simple download link for the "manifest" or a mock image
+    // Actual iframe capturing is blocked by browser CORS for security
+    const link = document.createElement('a');
+    link.download = `VIGYX_CAPTURE_CAM_${zoomedCard}_${Date.now()}.png`;
+    link.href = 'https://via.placeholder.com/1920x1080/000000/2bfff2?text=VIGYX+SECURITY+CAPTURE';
+    link.click();
+  };
+
   const closeZoom = () => {
     if (zoomedCard) {
       setZoomedCard(null);
@@ -95,9 +123,14 @@ const Home = () => {
       
       {/* Navigation */}
       <nav className="navbar">
-        <div className="logo-container">
-          <h1 className="logo">VIGYX</h1>
-          <span className="subtitle">Next Gen Intruder Detection System</span>
+        <div className="navbar-left">
+          <button className="hamburger-btn" onClick={(e) => { e.stopPropagation(); setIsSidebarOpen(!isSidebarOpen); }}>
+            {isSidebarOpen ? <FaTimes /> : <FaBars />}
+          </button>
+          <div className="logo-container">
+            <h1 className="logo">VIGYX</h1>
+            <span className="subtitle">Next Gen Intruder Detection System</span>
+          </div>
         </div>
         <div className="user-account">
           <div className="user-icon">
@@ -119,7 +152,7 @@ const Home = () => {
       {/* Main Content */}
       <main className="main-content">
         {/* Sidebar */}
-        <aside className="sidebar">
+        <aside className={`sidebar ${isSidebarOpen ? 'open' : ''}`} onClick={(e) => e.stopPropagation()}>
           <div className="filter-section">
             <h3 className="cyber-heading">How many screens should be visible on main screen at once?</h3>
             <div className="checkbox-group">
@@ -150,6 +183,23 @@ const Home = () => {
                   />
                   <span className="check-box"></span>
                   {target.charAt(0).toUpperCase() + target.slice(1)}
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div className="filter-section">
+            <h3 className="cyber-heading">Which object to highlight?</h3>
+            <div className="checkbox-group">
+              {['car', 'motor cycle', 'bus', 'truck'].map(obj => (
+                <label key={obj} className="cyber-checkbox">
+                  <input 
+                    type="checkbox" 
+                    checked={highlightObjects[obj]} 
+                    onChange={() => handleObjectChange(obj)}
+                  />
+                  <span className="check-box"></span>
+                  {obj.charAt(0).toUpperCase() + obj.slice(1)}
                 </label>
               ))}
             </div>
@@ -185,7 +235,7 @@ const Home = () => {
               <div className="cctv-content">
                 <iframe
                   className="cctv-iframe"
-                  src={`https://www.youtube.com/embed/${card.videoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${card.videoId}&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1`}
+                  src={`https://www.youtube-nocookie.com/embed/${card.videoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${card.videoId}&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1`}
                   title={`CCTV Feed ${card.id}`}
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -199,8 +249,16 @@ const Home = () => {
                     {Object.entries(highlightTargets).map(([target, isActive]) => 
                       isActive ? <span key={target} className="target-box">{target.toUpperCase()}</span> : null
                     )}
+                    {Object.entries(highlightObjects).map(([obj, isActive]) => 
+                      isActive ? <span key={obj} className="target-box">{obj.toUpperCase()}</span> : null
+                    )}
                   </div>
                 </div>
+                {zoomedCard === card.id && (
+                  <button className="screenshot-btn" onClick={takeScreenshot}>
+                    <FaCamera /> Take Screenshot
+                  </button>
+                )}
               </div>
             </div>
           ))}
