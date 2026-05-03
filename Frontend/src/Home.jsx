@@ -8,13 +8,7 @@ const Home = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showDisclaimer, setShowDisclaimer] = useState(true);
   const zoomRef = useRef(null);
-  
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date().toLocaleTimeString('en-GB'));
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
+
   const [highlightTargets, setHighlightTargets] = useState({
     man: false,
     woman: false,
@@ -27,7 +21,7 @@ const Home = () => {
     bus: false,
     truck: false,
   });
-  
+
   const [cards, setCards] = useState([
     { id: 1, videoId: 'M3EYAY2MftI' },
     { id: 2, videoId: 'rnXIjl_Rzy4' },
@@ -36,8 +30,59 @@ const Home = () => {
     { id: 5, videoId: '8JCk5M_xrBs' },
     { id: 6, videoId: 'rnNPl27Arpk' },
     { id: 7, videoId: 'gFRtAAmiFbE&list=PLxtg5zfgORZr8KB1VglBvI6czMJpPL-rx' },
-    { id: 8, videoId: '3nyPER2kzqk' }, 
+    { id: 8, videoId: '3nyPER2kzqk' },
   ]);
+
+  const colorMap = {
+    man: '#00ffd2',
+    woman: '#ff00e1',
+    girl: '#a200ff',
+    boy: '#0084ff',
+    car: '#ffae00',
+    'motor cycle': '#ffec00',
+    bus: '#00ff22',
+    truck: '#ff4d00',
+  };
+
+  const [detections, setDetections] = useState({});
+
+  useEffect(() => {
+    const updateDetections = () => {
+      const activeTypes = [
+        ...Object.entries(highlightTargets).filter(([_, v]) => v).map(([k]) => k),
+        ...Object.entries(highlightObjects).filter(([_, v]) => v).map(([k]) => k)
+      ];
+
+      if (activeTypes.length === 0) {
+        setDetections({});
+        return;
+      }
+
+      const newDetections = {};
+      cards.forEach(card => {
+        newDetections[card.id] = activeTypes.map(type => ({
+          id: `${card.id}-${type}-${Math.random()}`,
+          type,
+          top: `${15 + Math.random() * 50}%`,
+          left: `${15 + Math.random() * 60}%`,
+          width: `${12 + Math.random() * 10}%`,
+          height: `${20 + Math.random() * 15}%`,
+        }));
+      });
+      setDetections(newDetections);
+    };
+
+    updateDetections();
+    const interval = setInterval(updateDetections, 4000);
+    return () => clearInterval(interval);
+  }, [highlightTargets, highlightObjects, cards]);
+  
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date().toLocaleTimeString('en-GB'));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
   const [zoomedCard, setZoomedCard] = useState(null);
   const [isMoving, setIsMoving] = useState(false);
   const [movingCardId, setMovingCardId] = useState(null);
@@ -246,16 +291,53 @@ const Home = () => {
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 ></iframe>
+                <div className="detection-overlay">
+                  {detections[card.id] && detections[card.id].map((det) => (
+                    <div 
+                      key={det.id}
+                      className="bounding-box"
+                      style={{
+                        top: det.top,
+                        left: det.left,
+                        width: det.width,
+                        height: det.height,
+                        '--target-color': colorMap[det.type]
+                      }}
+                    >
+                      <div className="box-label">{det.type}</div>
+                      <div className="box-corner top-left"></div>
+                      <div className="box-corner top-right"></div>
+                      <div className="box-corner bottom-left"></div>
+                      <div className="box-corner bottom-right"></div>
+                      <div className="scanning-line"></div>
+                    </div>
+                  ))}
+                </div>
                 <div className="click-overlay"></div>
                 <div className="feed-info">
                   <span className="timestamp">REC {currentTime}</span>
                   <div className="highlight-boxes">
-                    {/* Placeholder for highlighted targets */}
                     {Object.entries(highlightTargets).map(([target, isActive]) => 
-                      isActive ? <span key={target} className="target-box">{target.toUpperCase()}</span> : null
+                      isActive ? (
+                        <span 
+                          key={target} 
+                          className="target-box" 
+                          style={{ '--target-color': colorMap[target] }}
+                        >
+                          {target.toUpperCase()}
+                        </span>
+                      ) : null
                     )}
                     {Object.entries(highlightObjects).map(([obj, isActive]) => 
-                      isActive ? <span key={obj} className="target-box">{obj.toUpperCase()}</span> : null
+                      isActive ? (
+                        <span 
+                          key={obj} 
+                          className="target-box" 
+                          style={{ '--target-color': colorMap[obj] }}
+                        >
+                          {obj.toUpperCase()}
+                        </span>
+                      ) : null
                     )}
                   </div>
                 </div>
