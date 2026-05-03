@@ -442,7 +442,7 @@ body {
   height: calc(100% + 110px); /* Adjust to hide both top and bottom bars */
   object-fit: cover;
   pointer-events: none;
-  filter: brightness(0.9) contrast(1.1);
+  filter: grayscale(100%) brightness(1.1) contrast(1.2);
 }
 
 .click-overlay {

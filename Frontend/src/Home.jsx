@@ -20,14 +20,14 @@ const Home = () => {
   });
   
   const [cards, setCards] = useState([
-    { id: 1, videoId: 'EO_1LWqsCNE' },
+    { id: 1, videoId: 'M3EYAY2MftI' },
     { id: 2, videoId: 'rnXIjl_Rzy4' },
     { id: 3, videoId: 'u8CbGedbI08' },
     { id: 4, videoId: '1rWzQP_ZYxc' },
     { id: 5, videoId: '8JCk5M_xrBs' },
     { id: 6, videoId: 'rnNPl27Arpk' },
-    { id: 7, videoId: 'M3EYAY2MftI' },
-    { id: 8, videoId: 'M3EYAY2MftI' }, 
+    { id: 7, videoId: 'EO_1LWqsCNE' },
+    { id: 8, videoId: '3nyPER2kzqk' }, 
   ]);
   const [zoomedCard, setZoomedCard] = useState(null);
   const [isMoving, setIsMoving] = useState(false);
