@@ -97,20 +97,11 @@ body {
   color: var(--primary-color);
   text-shadow: 0 0 10px var(--primary-color);
   letter-spacing: 2px;
-  animation: glitch 5s infinite;
   margin-bottom: 0.2rem;
   position: relative;
 }
 
-@keyframes glitch {
-  0% { transform: translate(0); }
-  2% { transform: translate(-2px, 2px); }
-  4% { transform: translate(-2px, -2px); }
-  6% { transform: translate(2px, 2px); }
-  8% { transform: translate(2px, -2px); }
-  10% { transform: translate(0); }
-  100% { transform: translate(0); }
-}
+
 
 .subtitle {
   font-size: 0.9rem;
