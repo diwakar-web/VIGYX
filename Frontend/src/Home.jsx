@@ -26,7 +26,7 @@ const Home = () => {
     { id: 4, videoId: '1rWzQP_ZYxc' },
     { id: 5, videoId: '8JCk5M_xrBs' },
     { id: 6, videoId: 'rnNPl27Arpk' },
-    { id: 7, videoId: 'EO_1LWqsCNE' },
+    { id: 7, videoId: 'gFRtAAmiFbE&list=PLxtg5zfgORZr8KB1VglBvI6czMJpPL-rx' },
     { id: 8, videoId: '3nyPER2kzqk' }, 
   ]);
   const [zoomedCard, setZoomedCard] = useState(null);

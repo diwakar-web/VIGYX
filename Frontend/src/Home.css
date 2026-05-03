@@ -332,8 +332,8 @@ body {
   flex-direction: column;
   transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: none;
-  aspect-ratio: 16 / 9;
-  min-height: 180px;
+  aspect-ratio: 16 / 10;
+  min-height: 220px;
   z-index: 1;
 }
 
