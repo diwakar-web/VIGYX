@@ -27,7 +27,7 @@ const Home = () => {
     { id: 5, videoId: '8JCk5M_xrBs' },
     { id: 6, videoId: 'rnNPl27Arpk' },
     { id: 7, videoId: 'M3EYAY2MftI' },
-    { id: 8, videoId: '21X5lGlDOfg' }, // Added a relevant one for the 8th slot
+    { id: 8, videoId: 'M3EYAY2MftI' }, 
   ]);
   const [zoomedCard, setZoomedCard] = useState(null);
   const [isMoving, setIsMoving] = useState(false);
@@ -78,6 +78,8 @@ const Home = () => {
       setCards(newCards);
       setIsMoving(false);
       setMovingCardId(null);
+    } else if (!isMoving) {
+      setZoomedCard(id);
     }
   };
 
@@ -183,7 +185,7 @@ const Home = () => {
               <div className="cctv-content">
                 <iframe
                   className="cctv-iframe"
-                  src={`https://www.youtube.com/embed/${card.videoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${card.videoId}&rel=0`}
+                  src={`https://www.youtube.com/embed/${card.videoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${card.videoId}&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1`}
                   title={`CCTV Feed ${card.id}`}
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

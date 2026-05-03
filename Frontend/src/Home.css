@@ -436,13 +436,13 @@ body {
 
 .cctv-iframe {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: -55px; /* Adjust to hide top bar */
+  left: -2px;
+  width: calc(100% + 4px);
+  height: calc(100% + 110px); /* Adjust to hide both top and bottom bars */
   object-fit: cover;
   pointer-events: none;
-  filter: brightness(0.8) contrast(1.2);
+  filter: brightness(0.9) contrast(1.1);
 }
 
 .click-overlay {
@@ -451,8 +451,9 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 5;
+  z-index: 10;
   cursor: pointer;
+  background: transparent;
 }
 
 .feed-info {
