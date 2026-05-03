@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Home.css';
-import { FaGithub, FaLinkedin, FaWhatsapp, FaInstagram, FaEnvelope, FaEllipsisV, FaUserCircle, FaSearchPlus, FaArrowsAlt, FaCamera, FaBars, FaTimes } from 'react-icons/fa';
+import { FaGithub, FaLinkedin, FaWhatsapp, FaInstagram, FaEnvelope, FaEllipsisV, FaUserCircle, FaSearchPlus, FaArrowsAlt, FaBars, FaTimes } from 'react-icons/fa';
 
 const Home = () => {
   const [screensVisible, setScreensVisible] = useState(4);
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString('en-GB'));
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [showDisclaimer, setShowDisclaimer] = useState(true);
   const zoomRef = useRef(null);
   
   useEffect(() => {
@@ -95,22 +96,6 @@ const Home = () => {
     }
   };
 
-  const takeScreenshot = (e) => {
-    e.stopPropagation();
-    // Simulate screenshot
-    const flash = document.createElement('div');
-    flash.className = 'screenshot-flash';
-    document.body.appendChild(flash);
-    setTimeout(() => flash.remove(), 100);
-
-    // Provide a simple download link for the "manifest" or a mock image
-    // Actual iframe capturing is blocked by browser CORS for security
-    const link = document.createElement('a');
-    link.download = `VIGYX_CAPTURE_CAM_${zoomedCard}_${Date.now()}.png`;
-    link.href = 'https://via.placeholder.com/1920x1080/000000/2bfff2?text=VIGYX+SECURITY+CAPTURE';
-    link.click();
-  };
-
   const closeZoom = () => {
     if (zoomedCard) {
       setZoomedCard(null);
@@ -119,7 +104,27 @@ const Home = () => {
 
   return (
     <div className="vigyx-container" onClick={closeZoom}>
-      {zoomedCard && <div className="blur-overlay"></div>}
+      {(zoomedCard || showDisclaimer) && <div className="blur-overlay"></div>}
+
+      {showDisclaimer && (
+        <div className="disclaimer-modal" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-content">
+            <h2 className="cyber-heading">SECURITY ACCESS PROTOCOL</h2>
+            <p>
+              VIGYX is a conceptual group project developed for educational and research purposes. 
+              We deeply respect individual privacy and ethical data practices.
+            </p>
+            <p className="sub-text">
+              All video feeds used here are publicly available streams integrated solely to 
+              demonstrate the capabilities of our intruder detection interface. This system 
+              is not intended for unauthorized surveillance or malicious use.
+            </p>
+            <button className="accept-btn" onClick={() => setShowDisclaimer(false)}>
+              I UNDERSTAND & PROCEED
+            </button>
+          </div>
+        </div>
+      )}
       
       {/* Navigation */}
       <nav className="navbar">
@@ -254,16 +259,15 @@ const Home = () => {
                     )}
                   </div>
                 </div>
-                {zoomedCard === card.id && (
-                  <button className="screenshot-btn" onClick={takeScreenshot}>
-                    <FaCamera /> Take Screenshot
-                  </button>
-                )}
               </div>
             </div>
           ))}
         </section>
       </main>
+
+      <div className="footer-disclaimer">
+        This project is a collaborative group effort. We respect everyone's privacy and adhere to ethical security research guidelines.
+      </div>
 
       {/* Footer */}
       <footer className="footer">
