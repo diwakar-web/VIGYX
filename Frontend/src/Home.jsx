@@ -24,11 +24,11 @@ const Home = () => {
 
   const [cards, setCards] = useState([
     { id: 1, videoId: 'M3EYAY2MftI' },
-    { id: 2, videoId: 'rnXIjl_Rzy4' },
+    { id: 2, videoId: 'uM1gksCoh8I' },
     { id: 3, videoId: 'u8CbGedbI08' },
     { id: 4, videoId: '1rWzQP_ZYxc' },
     { id: 5, videoId: '8JCk5M_xrBs' },
-    { id: 6, videoId: 'rnNPl27Arpk' },
+    { id: 6, videoId: 'Ksrleaxxxhw' },
     { id: 7, videoId: 'gFRtAAmiFbE&list=PLxtg5zfgORZr8KB1VglBvI6czMJpPL-rx' },
     { id: 8, videoId: '3nyPER2kzqk' },
   ]);
